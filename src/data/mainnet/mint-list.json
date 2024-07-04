@@ -1,6 +1,10 @@
 [
   {
-    "address": "btc address",
+    "address": "tb1q37ll9qqjald9xyvgsg2mduyrz40fyhk4528mqt",
     "token_id": 1
+  },
+  {
+    "address": "tb1q37ll9qqjald9xyvgsg2mduyrz40fyhk4528mqt",
+    "token_id": 2
   }
 ]
