@@ -1,8 +1,49 @@
-### Nervape mint
+# Nervape BTC mint - An example start repo for minting RGB++ protocol assets
 
-#### 分发步骤及说明
+## Quick start (English)
+0. clone this repo, install required packages:
 
-1. `npx ts-node src/0-prepare-utxo.ts` 创建 BTC cluster utxo, 用于绑定cluster Cell
+```bash
+git clone https://github.com/nervape/nervape-btc-mint.git
+cd nervape-btc-mint
+npm install
+```
+
+1. `npx ts-node src/0-prepare-utxo.ts` to create a BTC cluster UTXO, used for binding [Cluster Cell](https://docs.spore.pro/basics/spore-101#what-is-a-cluster
+
+   This will create a btc transaction, and record the UTXO into `logs/[network]/step-0.log`, formatted in: `{"txid":[txid],"index":0}`
+
+2.  `npx ts-node src/1-prepare-cluster.ts` create shadow Cell linked to UTXO from log. This will:
+    1. Read records from `./logs/[network]/step-0.log
+    2. Create RGB++ Cluster Cell on CKB
+    3. Send CKB transaction, till the transaction committed
+
+3.  `npx ts-node src/2-create-cluster.ts` Bind UTXO in log and RGB++ Cluster Cell we just created. This will:
+    1. record UTXO and Cluster ID into `logs/[network]/step-2.log`
+    2. record Cluster's block height into `logs/[network]/step-2-cluster-block-height.log`
+    3. record UTXO and btcTxBytes into `logs/[network]/step-3-0.log`
+    4. send the BTC transaction, after BTC transaction committed, send CKB side transaction
+
+4.  `npx ts-node src/3-create-spore.ts [batchNo]` minting Spore in a batch.
+    1. `batchNo` starting from 1, every batch contains 100 records
+    2. read Cluster ID from `logs/[network]/step-2.log`
+    3. read `clusterBlockHeight` from `logs/[network]/step-2-cluster-block-height.log`
+    4. read UTXO record from  `logs/[network]/step-3-[batchNo-1].log`
+    5. send BTC transaction, after BTC transaction committed, send CKB side transaction
+
+#### Tips
+Less than or equal to **100** spores in a batch is recommended, or CKB transaction will fail.
+
+## 使用说明
+
+0. 克隆该仓库，安装必要模块:
+```bash
+git clone https://github.com/nervape/nervape-btc-mint.git
+cd nervape-btc-mint
+npm install
+```
+
+1. `npx ts-node src/0-prepare-utxo.ts` 创建 BTC cluster utxo, 用于绑定[Cluster Cell](https://docs.spore.pro/basics/spore-101#what-is-a-cluster).
 
     创建btc utxo交易，并将utxo记录到`logs/[network]/step-0.log`，记录内容为 `{"txid":[txid],"index":0}`
 
@@ -24,3 +65,5 @@
     4. 读取 `logs/[network]/step-3-[batchNo-1].log`中的utxo
     5. 发送btc交易，btc交易确认后发送ckb交易
 
+#### 提醒
+建议一个批次不要超过 ***100*** 个spore，否则会导致CKB交易失败。
