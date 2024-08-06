@@ -11,7 +11,7 @@ npm install
 
 1. `npx ts-node src/0-prepare-utxo.ts` to create a BTC cluster UTXO, used for binding [Cluster Cell](https://docs.spore.pro/basics/spore-101#what-is-a-cluster
 
-   This will creat a btc transaction, and record the UTXO into `logs/[network]/step-0.log`, formatted in: `{"txid":[txid],"index":0}`
+   This will create a btc transaction, and record the UTXO into `logs/[network]/step-0.log`, formatted in: `{"txid":[txid],"index":0}`
 
 2.  `npx ts-node src/1-prepare-cluster.ts` create shadow Cell linked to UTXO from log. This will:
     1. Read records from `./logs/[network]/step-0.log
@@ -28,9 +28,11 @@ npm install
     1. `batchNo` starting from 1, every batch contains 100 records
     2. read Cluster ID from `logs/[network]/step-2.log`
     3. read `clusterBlockHeight` from `logs/[network]/step-2-cluster-block-height.log`
-    4. Read UTXO record from  `logs/[network]/step-3-[batchNo-1].log`
+    4. read UTXO record from  `logs/[network]/step-3-[batchNo-1].log`
     5. send BTC transaction, after BTC transaction committed, send CKB side transaction
 
+#### Tips
+Less than or equal to **100** spores in a batch is recommended, or CKB transaction will fail.
 
 ## 使用说明
 
@@ -63,3 +65,5 @@ npm install
     4. 读取 `logs/[network]/step-3-[batchNo-1].log`中的utxo
     5. 发送btc交易，btc交易确认后发送ckb交易
 
+#### 提醒
+建议一个批次不要超过 ***100*** 个spore，否则会导致CKB交易失败。
